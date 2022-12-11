@@ -80,7 +80,7 @@ class roleManager {
     }
 
     public function showRoles($account) {
-        $account->showRole();
+       return $account->showRole();
     }
 }
 
@@ -143,7 +143,6 @@ echo "</pre>";
 
 echo "roleManager showRoles on test_account:";
 echo "<pre>";
-var_dump($test_account->showRole());
 var_dump($role_manager->showRoles($test_account));
 echo "</pre>";
 
