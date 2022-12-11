@@ -39,6 +39,18 @@ class Account {
     {
         array_push($this->roles, $role);
     }
+
+    public function delRole(Role $role) : void 
+    {
+        unset($this->roles[array_search($role, $this->roles)]); 
+    }
+
+    public function showRole() : array
+    {
+        return $this->roles;
+    }
+
+    
 }
 
 class userProfile {
@@ -59,13 +71,17 @@ class userProfile {
 }
 
 class roleManager {
-    public function getAccount($accountID) {
-        //continue;// Een functie die de juiste object vindt adhv de accountID?
-    }
-
     public function giveRole($account, $role) {
         $account->addRole($role);
     }   
+
+    public function remRole($account, $role) {
+        $account->delRole($role);
+    }
+
+    public function showRoles($account) {
+        $account->showRole();
+    }
 }
 
 class Role {
@@ -91,10 +107,17 @@ class Permission {
 
 }
 
+// --------------------------------------------------------------POC --------------------------------------------------------------
+
 $test_account = new Account("test@email.com", "supersecretpassword01!", true, false);
 
+echo "Instantiation of account object:";
 echo "<pre>";
 var_dump($test_account);
+echo "</pre>";
+
+echo "Logged in account:";
+echo "<pre>";
 $test_account->logIn();
 var_dump($test_account);
 echo "</pre>";
@@ -102,15 +125,33 @@ echo "</pre>";
 
 $test_account->createUserProfile("Alex", "51.58404459919641, 4.797649863611824", "+31637293365", "10/07/1991");
 
+echo "Instantiation of user profile object in account object:";
 echo "<pre>";
 $test_account->logOut();
 var_dump($test_account);
+echo "</pre>";
 
 
 $role_manager = new roleManager();
 $admin = new Role("admin", "administrator description");
 $role_manager->giveRole($test_account, $admin);
 
+echo nl2br("Instantiation of the roleManager and admin role objects\r\nThe roleManager giving the admin role to the test account");
+echo "<pre>";
 var_dump($test_account);
 echo "</pre>";
+
+echo "roleManager showRoles on test_account:";
+echo "<pre>";
+var_dump($test_account->showRole());
+var_dump($role_manager->showRoles($test_account));
+echo "</pre>";
+
+$role_manager->remRole($test_account, $admin);
+
+echo "RoleManager removing admin role from test_account";
+echo "<pre>";
+var_dump($test_account);
+echo "</pre>";
+
 ?>
