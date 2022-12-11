@@ -34,6 +34,11 @@ class Account {
     public function logOut() : void {
         $this->isLoggedIn = false;
     }
+    
+    public function addRole(Role $role) : void
+    {
+        array_push($this->roles, $role);
+    }
 }
 
 class userProfile {
@@ -43,7 +48,8 @@ class userProfile {
     private string $phoneNumber;
     private string $dateOfBirth;
 
-public function __construct($userProfileID, $firstName, $location, $phoneNumber, $dateOfBirth) {
+    public function __construct($userProfileID, $firstName, $location, $phoneNumber, $dateOfBirth) 
+    {
         $this->userProfileID = $userProfileID;
         $this->firstName = $firstName;
         $this->location = $location;
@@ -53,13 +59,13 @@ public function __construct($userProfileID, $firstName, $location, $phoneNumber,
 }
 
 class roleManager {
-    public getAccount(accountID) {
-        continue;// Een functie die de juiste object vindt adhv de accountID?
+    public function getAccount($accountID) {
+        //continue;// Een functie die de juiste object vindt adhv de accountID?
     }
 
-    public function giveRole($accountID, $role) {
-        array_push($accountID->roles, $role); // Error omdat ik roles property (array) will modificeren, maar ik moet niet de accountID->roles
-    }                                         // selecteren maar de variable naam die wordt toegekend aan het object
+    public function giveRole($account, $role) {
+        $account->addRole($role);
+    }   
 }
 
 class Role {
@@ -103,6 +109,8 @@ var_dump($test_account);
 
 $role_manager = new roleManager();
 $admin = new Role("admin", "administrator description");
-$role_manager->giveRole($test_account->getAccountID(), $admin->__toString());
+$role_manager->giveRole($test_account, $admin);
+
+var_dump($test_account);
 echo "</pre>";
 ?>
