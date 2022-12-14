@@ -46,26 +46,19 @@ class Account {
         unset($this->roles[array_search($role, $this->roles)]); 
     }
 
-    public function showRole() : array
+    public function getRole() : array
     {
         return $this->roles;
     }
 
-    public function checkPermission(Permission $permission) : bool
+    public function hasPermission(Permission $permission) : bool
     {
-        $found = false;
         foreach($this->roles as $role) {
-            if($role->checkPermission($permission)) {
-                $found = true;
-                break;
+            if($role->hasPermission($permission)) {
+                return true;
             }
         }
-
-        if ($found === false) {
-            return false;
-        } else {
-            return true;
-        }
+        return false;
     }
 }
 
@@ -97,9 +90,9 @@ class roleManager {
         $account->delRole($role);
     }
 
-    public function showRoles(Account $account) : array 
+    public function getRoles(Account $account) : array 
     {
-       return $account->showRole();
+       return $account->getRole();
     }
 
     public function givePermission(Role $role, Permission $permission) : void
@@ -112,14 +105,14 @@ class roleManager {
         $role->delPermission($permission);
     }
 
-    public function showPermissions(Role $role) : array 
+    public function getPermissions(Role $role) : array 
     {
-        return $role->showPermission();
+        return $role->getPermission();
     }
 
-    public function checkPermissions(Account $account, Permission $permission)
+    public function hasPermissions(Account $account, Permission $permission)
     {
-        return $account->checkPermission($permission);
+        return $account->hasPermission($permission);
     }
 }
 
@@ -149,12 +142,12 @@ class Role {
         unset($this->permissions[array_search($permission, $this->permissions)]); 
     }
 
-    public function showPermission() : array 
+    public function getPermission() : array 
     {
         return $this->permissions;
     }
     
-    public function checkPermission(Permission $permission) : bool
+    public function hasPermission(Permission $permission) : bool
     {
         return in_array($permission, $this->permissions);
     }
@@ -207,10 +200,10 @@ echo "<pre>";
 var_dump($test_account);
 echo "</pre>";
 
-// roleManager showRoles method on the test_account
-echo "roleManager showRoles on test_account:";
+// roleManager getRoles method on the test_account
+echo "roleManager getRoles on test_account:";
 echo "<pre>";
-var_dump($role_manager->showRoles($test_account));
+var_dump($role_manager->getRoles($test_account));
 echo "</pre>";
 
 // Instantiation of the del_acc_permission object and the roleManager object giving the permission to the admin role
@@ -221,10 +214,10 @@ echo "<pre>";
 var_dump($admin);
 echo "</pre>";
 
-// roleManager object showing the permissions of the admin role
-echo "roleManager showing permissions of admin role:";
+// roleManager object getting the permissions of the admin role
+echo "roleManager getting permissions of admin role:";
 echo "<pre>";
-var_dump($role_manager->showPermissions($admin));
+var_dump($role_manager->getPermissions($admin));
 echo "</pre>";
 
 // test_account with the admin role and del_account_permission
@@ -238,7 +231,7 @@ echo "</pre>";
 echo "roleManager object checking test_account for del_acc_permission (loops trough the roles array and checks if permission exists in a role, ";
 echo "returns true or false):";
 echo "<pre>";
-var_dump($role_manager->checkPermissions($test_account, $del_acc_permission));
+var_dump($role_manager->hasPermissions($test_account, $del_acc_permission));
 echo "</pre>";
 
 // roleManager removing the del_acc_permission from the admin role
@@ -251,7 +244,7 @@ echo "</pre>";
 // roleManager checking for permission again
 echo "roleManager checking for permission again";
 echo "<pre>";
-var_dump($role_manager->checkPermissions($test_account, $del_acc_permission));
+var_dump($role_manager->hasPermissions($test_account, $del_acc_permission));
 echo "</pre>";
 
 // roleManager removing the admin role form the test_account
