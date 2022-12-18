@@ -119,7 +119,7 @@ class roleManager {
 class Role {
     private string $roleName;
     private string $roleDescription;
-    private array $permissions;
+    private array $permissions; 
 
     public function __construct($roleName, $roleDescription) {
         $this->roleName = $roleName;
@@ -134,7 +134,7 @@ class Role {
 
     public function addPermission(Permission $permission) : void 
     {
-        array_push($this->permissions, $permission);
+        $this->permissions[] = $permission;
     }
 
     public function deletePermission(Permission $permission) : void 
