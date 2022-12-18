@@ -41,7 +41,7 @@ class Account {
         array_push($this->roles, $role);
     }
 
-    public function delRole(Role $role) : void 
+    public function deleteRole(Role $role) : void 
     {
         unset($this->roles[array_search($role, $this->roles)]); 
     }
@@ -85,9 +85,9 @@ class roleManager {
         $account->addRole($role);
     }   
 
-    public function remRole(Account $account, Role $role) : void 
+    public function removeRole(Account $account, Role $role) : void 
     {
-        $account->delRole($role);
+        $account->deleteRole($role);
     }
 
     public function getRoles(Account $account) : array 
@@ -100,9 +100,9 @@ class roleManager {
         $role->addPermission($permission);
     }
 
-    public function remPermission(Role $role, Permission $permission) : void 
+    public function removePermission(Role $role, Permission $permission) : void 
     {
-        $role->delPermission($permission);
+        $role->deletePermission($permission);
     }
 
     public function getPermissions(Role $role) : array 
@@ -137,7 +137,7 @@ class Role {
         array_push($this->permissions, $permission);
     }
 
-    public function delPermission(Permission $permission) : void 
+    public function deletePermission(Permission $permission) : void 
     {
         unset($this->permissions[array_search($permission, $this->permissions)]); 
     }
@@ -235,7 +235,7 @@ var_dump($role_manager->hasPermissions($test_account, $del_acc_permission));
 echo "</pre>";
 
 // roleManager removing the del_acc_permission from the admin role
-$role_manager->remPermission($admin, $del_acc_permission);
+$role_manager->removePermission($admin, $del_acc_permission);
 echo "RoleManager removing del_acc_permission permission from admin role:";
 echo "<pre>";
 var_dump($admin);
@@ -248,7 +248,7 @@ var_dump($role_manager->hasPermissions($test_account, $del_acc_permission));
 echo "</pre>";
 
 // roleManager removing the admin role form the test_account
-$role_manager->remRole($test_account, $admin);
+$role_manager->removeRole($test_account, $admin);
 echo "RoleManager removing the admin role from test_account:";
 echo "<pre>";
 var_dump($test_account);
