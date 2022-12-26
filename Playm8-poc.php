@@ -9,7 +9,7 @@ class Account {
     private array $roles;
     private userProfile $userProfile;
 
-    function __construct($email, $password, $enabled, $isLoggedIn) {
+    public function __construct($email, $password, $enabled, $isLoggedIn) {
         $this->accountID = uniqid("AID");
         $this->email = $email;
         $this->password = $password;
@@ -253,5 +253,3 @@ echo "RoleManager removing the admin role from test_account:";
 echo "<pre>";
 var_dump($test_account);
 echo "</pre>";
-
-?>
