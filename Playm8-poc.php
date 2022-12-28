@@ -1,60 +1,65 @@
 <?php
-class Account {
+class Account
+{
 
     private string $accountID;
+    private string $account_username;
     private string $email;
     private string $password;
     private bool $enabled;
-    private bool $isLoggedIn;
     private array $roles;
     private userProfile $userProfile;
 
-    public function __construct($email, $password, $enabled, $isLoggedIn) {
+    public function __construct($account_username, $email, $password, $enabled)
+    {
         $this->accountID = uniqid("AID");
+        $this->account_username = $account_username;
         $this->email = $email;
         $this->password = $password;
         $this->enabled = $enabled;
         $this->roles = array();
-        $this->isLoggedIn = $isLoggedIn;
     }
 
-    public function createUserProfile($firstName, $location, $phoneNumber, $dateOfBirth) {
+    public function createUserProfile($firstName, $lastName, $location, $phoneNumber, $dateOfBirth, $age)
+    {
         $userProfileID = "UP" . substr($this->accountID, 3);
-        $this->userProfile = new userProfile($userProfileID, $firstName, $location, $phoneNumber, $dateOfBirth);
+        $this->userProfile = new userProfile($userProfileID, $firstName, $lastName, $location, $phoneNumber, $dateOfBirth, $age);
     }
 
-    public function getAccountID() : string 
+    public function getAccountID(): string
     {
         return $this->accountID;
     }
 
-    public function logIn() : void {
+    public function logIn(): void
+    {
         $this->isLoggedIn = true;
     }
 
-    public function logOut() : void {
+    public function logOut(): void
+    {
         $this->isLoggedIn = false;
     }
-    
-    public function addRole(Role $role) : void
+
+    public function addRole(Role $role): void
     {
         array_push($this->roles, $role);
     }
 
-    public function deleteRole(Role $role) : void 
+    public function deleteRole(Role $role): void
     {
-        unset($this->roles[array_search($role, $this->roles)]); 
+        unset($this->roles[array_search($role, $this->roles)]);
     }
 
-    public function getRole() : array
+    public function getRole(): array
     {
         return $this->roles;
     }
 
-    public function hasPermission(Permission $permission) : bool
+    public function hasPermission(Permission $permission): bool
     {
-        foreach($this->roles as $role) {
-            if($role->hasPermission($permission)) {
+        foreach ($this->roles as $role) {
+            if ($role->hasPermission($permission)) {
                 return true;
             }
         }
@@ -62,50 +67,56 @@ class Account {
     }
 }
 
-class userProfile {
+class userProfile
+{
     private string $userProfileID;
     private string $firstName;
+    private string $lastName;
     private string $location;
     private string $phoneNumber;
     private string $dateOfBirth;
+    private string $age;
 
-    public function __construct($userProfileID, $firstName, $location, $phoneNumber, $dateOfBirth) 
+    public function __construct($userProfileID, $firstName,  $lastName, $location, $phoneNumber, $dateOfBirth, $age)
     {
         $this->userProfileID = $userProfileID;
         $this->firstName = $firstName;
+        $this->lastName = $lastName;
         $this->location = $location;
         $this->phoneNumber = $phoneNumber;
         $this->dateOfBirth = $dateOfBirth;
+        $this->age = $age;
     }
 }
 
-class roleManager {
-    public function giveRole(Account $account, Role $role) : void
-     {
+class roleManager
+{
+    public function giveRole(Account $account, Role $role): void
+    {
         $account->addRole($role);
-    }   
+    }
 
-    public function removeRole(Account $account, Role $role) : void 
+    public function removeRole(Account $account, Role $role): void
     {
         $account->deleteRole($role);
     }
 
-    public function getRoles(Account $account) : array 
+    public function getRoles(Account $account): array
     {
-       return $account->getRole();
+        return $account->getRole();
     }
 
-    public function givePermission(Role $role, Permission $permission) : void
+    public function givePermission(Role $role, Permission $permission): void
     {
         $role->addPermission($permission);
     }
 
-    public function removePermission(Role $role, Permission $permission) : void 
+    public function removePermission(Role $role, Permission $permission): void
     {
         $role->deletePermission($permission);
     }
 
-    public function getPermissions(Role $role) : array 
+    public function getPermissions(Role $role): array
     {
         return $role->getPermission();
     }
@@ -116,52 +127,55 @@ class roleManager {
     }
 }
 
-class Role {
+class Role
+{
     private string $roleName;
     private string $roleDescription;
-    private array $permissions; 
+    private array $permissions;
 
-    public function __construct($roleName, $roleDescription) {
+    public function __construct($roleName, $roleDescription)
+    {
         $this->roleName = $roleName;
         $this->roleDescription = $roleDescription;
         $this->permissions = array();
     }
 
-    public function __toString() : string 
+    public function __toString(): string
     {
         return $this->roleName;
     }
 
-    public function addPermission(Permission $permission) : void 
+    public function addPermission(Permission $permission): void
     {
         $this->permissions[] = $permission;
     }
 
-    public function deletePermission(Permission $permission) : void 
+    public function deletePermission(Permission $permission): void
     {
-        unset($this->permissions[array_search($permission, $this->permissions)]); 
+        unset($this->permissions[array_search($permission, $this->permissions)]);
     }
 
-    public function getPermission() : array 
+    public function getPermission(): array
     {
         return $this->permissions;
     }
-    
-    public function hasPermission(Permission $permission) : bool
+
+    public function hasPermission(Permission $permission): bool
     {
         return in_array($permission, $this->permissions);
     }
 }
 
-class Permission {
+class Permission
+{
     private string $permissionName;
     private string $permissionDescription;
 
-    public function __construct($permissionName, $permissionDescription) {
+    public function __construct($permissionName, $permissionDescription)
+    {
         $this->permissionName = $permissionName;
         $this->permissionDescription = $permissionDescription;
     }
-
 }
 
 
@@ -170,7 +184,7 @@ class Permission {
 
 
 // Instantiation of an account object
-$test_account = new Account("test@email.com", "supersecretpassword01!", true, false);
+$test_account = new Account("testaccount", "test@email.com", "supersecretpassword01!", false);
 echo "Instantiation of an account object:";
 echo "<pre>";
 var_dump($test_account);
@@ -184,7 +198,7 @@ var_dump($test_account);
 echo "</pre>";
 
 // Instantiation of user profile object inside the account object
-$test_account->createUserProfile("Alex", "51.58404459919641, 4.797649863611824", "+31637293365", "10/07/1991");
+$test_account->createUserProfile("Alex", "Test", "51.58404459919641, 4.797649863611824", "+31637293365", "10/07/1991", "31");
 echo "Instantiation of user profile object inside the account object:";
 echo "<pre>";
 $test_account->logOut();
